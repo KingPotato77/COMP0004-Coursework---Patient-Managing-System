@@ -1,19 +1,41 @@
 package uk.ac.ucl.model;
 
-import java.io.Reader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
 
-public class Model
-{
+
+public class Model {
+  private DataFrame df;
+
+  public void readFile(String fileName) {
+    DataLoader loader = new DataLoader();
+    df = loader.loadData(fileName);
+  }
+
+  public DataFrame getDf() {
+    return df;
+  }
+
+  public List<String> searchFor(String keyword) {
+    List<String> results = new ArrayList<>();
+
+    for (int row = 0; row < df.getRowCount(); row++) {
+      for (String colName : df.getColumnNames()) {
+        String cellValue = df.getValue(colName, row);
+
+        if (cellValue != null && cellValue.toLowerCase().contains(keyword)) {
+          results.add(df.getValue("ID", row));
+          break;
+        }
+      }
+    }
+
+    return results;
+  }
+
+  /*
   // The example code in this class should be replaced by your Model class code.
   // The data should be stored in a suitable data structure.
-
   public List<String> getPatientNames()
   {
     return readFile("data/patients100.csv");
@@ -46,5 +68,5 @@ public class Model
   public List<String> searchFor(String keyword)
   {
     return List.of("Search keyword is: "+ keyword, "result1", "result2", "result3");
-  }
+  }*/
 }
