@@ -10,9 +10,8 @@ public class DataFrame {
         columns = new ArrayList<Column>();
     }
 
-    public void addColumn(String name) {
-        Column new_col = new Column(name);
-        columns.add(new_col);
+    public void addColumn(Column column) {
+        columns.add(column);
     }
 
     // change to List<String> ???
