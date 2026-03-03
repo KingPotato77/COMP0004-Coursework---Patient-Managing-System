@@ -1,7 +1,9 @@
 package uk.ac.ucl.model;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class Model {
@@ -41,6 +43,19 @@ public class Model {
     }
 
     return names;
+  }
+
+  public Map<String, String> getPatientDetails(String id) {
+    Map<String, String> details = new LinkedHashMap<>();
+    for (int row = 0; row < df.getRowCount(); row++) {
+      if (df.getValue("ID", row).equals(id)) {
+        for (String colName : df.getColumnNames()) {
+          details.put(colName, df.getValue(colName, row));
+        }
+        break;
+      }
+    }
+    return details;
   }
 }
   /*
