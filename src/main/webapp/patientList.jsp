@@ -24,9 +24,12 @@
       List<String> patients = (List<String>) request.getAttribute("patientNames");
       if (patients != null)
       {
-        for (String patient : patients)
+        uk.ac.ucl.model.Model model = uk.ac.ucl.model.ModelFactory.getModel();
+        for (int i = 0; i < patients.size(); i++)
         {
-          String href = "dummypage.html";
+          String patient = patients.get(i);
+          String patientId = model.getDf().getValue("ID", i);
+          String href = "patientDetails?id=" + patientId;
     %>
     <li><a href="<%=href%>"><%=patient%></a>
     </li>
