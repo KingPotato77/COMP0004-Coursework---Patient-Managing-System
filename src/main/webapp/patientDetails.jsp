@@ -43,7 +43,7 @@
     }
   %>
   <br>
-
+  <a href="patientList">Back to Patient List</a>
 </div>
 <jsp:include page="/footer.jsp"/>
 </body>
