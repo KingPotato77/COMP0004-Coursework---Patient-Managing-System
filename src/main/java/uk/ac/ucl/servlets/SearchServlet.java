@@ -70,6 +70,8 @@ public class SearchServlet extends HttpServlet {
         // This makes the 'result' list accessible to the JSP page.
         List<String> searchResult = model.searchFor(searchString);
         request.setAttribute("result", searchResult);
+        // Used by footer.jsp to show how many patients matched this keyword.
+        request.setAttribute("matchedCount", searchResult.size());
       }
 
       // 5. Forward the request to the JSP page for display.
