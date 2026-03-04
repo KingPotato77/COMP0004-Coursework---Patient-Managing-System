@@ -60,12 +60,8 @@ public class Model {
     return details;
   }
 
-  // ========== REQUIREMENT 7: OPERATIONS ==========
+  // methods for requirement 7
 
-  /**
-   * Find the oldest living person in the dataset.
-   * Returns a map with the patient's name and age.
-   */
   public Map<String, String> findOldestPerson() {
     Map<String, String> oldest = new LinkedHashMap<>();
     int maxAge = -1;
@@ -74,7 +70,7 @@ public class Model {
 
     for (int i = 0; i < df.getRowCount(); i++) {
       String deathDate = df.getValue("DEATHDATE", i);
-      // Only consider living people (no death date)
+      // Only consider alive people (no death date)
       if (deathDate == null || deathDate.isEmpty()) {
         String birthDateStr = df.getValue("BIRTHDATE", i);
         if (birthDateStr != null && !birthDateStr.isEmpty()) {
@@ -96,9 +92,7 @@ public class Model {
     return oldest;
   }
 
-  /**
-   * Find the youngest person in the dataset.
-   */
+
   public Map<String, String> findYoungestPerson() {
     Map<String, String> youngest = new LinkedHashMap<>();
     int minAge = Integer.MAX_VALUE;
@@ -125,9 +119,7 @@ public class Model {
     return youngest;
   }
 
-  /**
-   * Count how many people live in each city.
-   */
+
   public Map<String, Integer> getPeopleByCity() {
     Map<String, Integer> cityCount = new LinkedHashMap<>();
 
@@ -150,9 +142,7 @@ public class Model {
       ));
   }
 
-  /**
-   * Count how many people live in each state.
-   */
+
   public Map<String, Integer> getPeopleByState() {
     Map<String, Integer> stateCount = new LinkedHashMap<>();
 
@@ -175,9 +165,7 @@ public class Model {
       ));
   }
 
-  /**
-   * Get gender distribution.
-   */
+
   public Map<String, Integer> getGenderDistribution() {
     Map<String, Integer> genderCount = new LinkedHashMap<>();
 
@@ -192,9 +180,7 @@ public class Model {
     return genderCount;
   }
 
-  /**
-   * Get race distribution.
-   */
+
   public Map<String, Integer> getRaceDistribution() {
     Map<String, Integer> raceCount = new LinkedHashMap<>();
 
@@ -217,9 +203,7 @@ public class Model {
       ));
   }
 
-  /**
-   * Get marital status distribution.
-   */
+
   public Map<String, Integer> getMaritalStatusDistribution() {
     Map<String, Integer> maritalCount = new LinkedHashMap<>();
 
@@ -244,9 +228,7 @@ public class Model {
       ));
   }
 
-  /**
-   * Get ethnicity distribution.
-   */
+
   public Map<String, Integer> getEthnicityDistribution() {
     Map<String, Integer> ethnicityCount = new LinkedHashMap<>();
 
@@ -271,16 +253,12 @@ public class Model {
       ));
   }
 
-  /**
-   * Get total patient count.
-   */
+
   public int getTotalPatientCount() {
     return df.getRowCount();
   }
 
-  /**
-   * Get count of deceased patients.
-   */
+
   public int getDeceasedCount() {
     int count = 0;
     for (int i = 0; i < df.getRowCount(); i++) {
@@ -292,9 +270,7 @@ public class Model {
     return count;
   }
 
-  /**
-   * Get count of living patients.
-   */
+
   public int getLivingCount() {
     return getTotalPatientCount() - getDeceasedCount();
   }
@@ -312,9 +288,7 @@ public class Model {
     }
   }
 
-  /**
-   * Get average age of living patients.
-   */
+
   public double getAverageAge() {
     int totalAge = 0;
     int count = 0;
@@ -334,9 +308,7 @@ public class Model {
     return count > 0 ? (double) totalAge / count : 0.0;
   }
 
-  /**
-   * Get people in a specific city.
-   */
+
   public List<String> getPeopleInCity(String cityName) {
     List<String> people = new ArrayList<>();
     for (int i = 0; i < df.getRowCount(); i++) {
