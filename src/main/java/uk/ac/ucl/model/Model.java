@@ -26,7 +26,9 @@ public class Model {
         String cellValue = df.getValue(colName, row);
 
         if (cellValue != null && cellValue.toLowerCase().contains(keyword)) {
-          results.add(df.getValue("ID", row));
+          String firstName = df.getValue("FIRST", row);
+          String lastName = df.getValue("LAST", row);
+          results.add(firstName + " " + lastName);
           break;
         }
       }
