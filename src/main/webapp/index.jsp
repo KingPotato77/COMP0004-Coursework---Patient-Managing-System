@@ -12,6 +12,7 @@
     <ul>
       <li><a href="patientList">View the Patient List</a></li>
       <li><a href="search">Search</a></li>
+      <li><a href="statistics">View Statistics & Analytics</a></li>
     </ul>
   </nav>
 </div>
