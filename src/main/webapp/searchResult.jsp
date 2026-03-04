@@ -36,6 +36,6 @@
   </ul>
 </div>
 <jsp:include page="/footer.jsp"/>
-<a href="/search.html">Back to Search</a>
+<a href="/search">Back to Search</a>
 </body>
 </html>
