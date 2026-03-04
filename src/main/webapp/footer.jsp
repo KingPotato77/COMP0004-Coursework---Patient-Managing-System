@@ -2,7 +2,7 @@
   <p>The footer</p>
   <%
     Integer matchedCount = (Integer) request.getAttribute("matchedCount");
-    if (matchedCount != null)
+    if (matchedCount != null && matchedCount > 0)
     {
   %>
   <p>Patients matched: <%= matchedCount %></p>
