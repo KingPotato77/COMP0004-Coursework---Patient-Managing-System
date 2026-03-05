@@ -13,6 +13,7 @@
       <li><a href="patientList">View the Patient List</a></li>
       <li><a href="search">Search</a></li>
       <li><a href="statistics">View Statistics & Analytics</a></li>
+      <li><a href="export">Export to CSV</a></li>
     </ul>
   </nav>
 </div>
