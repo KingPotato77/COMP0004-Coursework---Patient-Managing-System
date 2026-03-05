@@ -30,4 +30,8 @@ public class Column {
     public void addRowValue(String value) {
         rows.add(value);
     }
+
+    public void removeRow(int idx) {
+        rows.remove(idx);
+    }
 }

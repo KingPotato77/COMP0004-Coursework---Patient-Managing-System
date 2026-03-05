@@ -60,6 +60,7 @@ public class Model {
     return details;
   }
 
+
   // methods for requirement 7
 
   public Map<String, String> findOldestPerson() {
@@ -319,4 +320,93 @@ public class Model {
     }
     return people;
   }
+
+  // ========== REQUIREMENT 8: ADD/EDIT/DELETE ==========
+
+  /**
+   * Update a patient's field value.
+   */
+  public void updatePatient(String patientId, String columnName, String value) {
+    for (int row = 0; row < df.getRowCount(); row++) {
+      if (df.getValue("ID", row).equals(patientId)) {
+        df.putValue(columnName, row, value);
+        break;
+      }
+    }
+  }
+
+  /**
+   * Delete a patient by ID.
+   */
+  public void deletePatient(String patientId) {
+    for (int row = 0; row < df.getRowCount(); row++) {
+      if (df.getValue("ID", row).equals(patientId)) {
+        // Actually remove the row from the DataFrame
+        df.removeRow(row);
+        break;
+      }
+    }
+  }
+
+  /**
+   * Add a new patient with the provided data.
+   */
+  public void addNewPatient(Map<String, String> patientData) {
+    for (String colName : df.getColumnNames()) {
+      String value = patientData.getOrDefault(colName, "");
+      df.addValue(colName, value);
+    }
+  }
+
+  /**
+   * Save DataFrame to CSV file.
+   */
+  public void saveToCSV(String fileName) {
+    try {
+      java.io.FileWriter writer = new java.io.FileWriter(fileName);
+
+      // Write header (column names)
+      ArrayList<String> columnNames = df.getColumnNames();
+      for (int i = 0; i < columnNames.size(); i++) {
+        writer.write(columnNames.get(i));
+        if (i < columnNames.size() - 1) {
+          writer.write(",");
+        }
+      }
+      writer.write("\n");
+
+      // Write data rows (skip empty rows that were deleted)
+      for (int row = 0; row < df.getRowCount(); row++) {
+        boolean isEmpty = true;
+        for (String colName : columnNames) {
+          String value = df.getValue(colName, row);
+          if (value != null && !value.isEmpty()) {
+            isEmpty = false;
+            break;
+          }
+        }
+
+        // Skip empty rows (deleted patients)
+        if (isEmpty) {
+          continue;
+        }
+
+        for (int i = 0; i < columnNames.size(); i++) {
+          String value = df.getValue(columnNames.get(i), row);
+          if (value != null) {
+            writer.write(value);
+          }
+          if (i < columnNames.size() - 1) {
+            writer.write(",");
+          }
+        }
+        writer.write("\n");
+      }
+
+      writer.close();
+    } catch (Exception e) {
+      System.err.println("Error saving CSV: " + e.getMessage());
+    }
+  }
 }
+

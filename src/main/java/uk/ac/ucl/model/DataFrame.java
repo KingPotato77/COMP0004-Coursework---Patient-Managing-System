@@ -55,6 +55,12 @@ public class DataFrame {
             }
         }
     }
+
+    public void removeRow(int row) {
+        for (Column column : columns) {
+            column.removeRow(row);
+        }
+    }
 }
 
 // maybe make findColumn() to not repeat the for loop in every method
