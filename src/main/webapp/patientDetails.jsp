@@ -43,7 +43,16 @@
     }
   %>
   <br>
-  <a href="patientList">Back to Patient List</a>
+  <%
+    String patientId = request.getParameter("id");
+    if (patientId != null) {
+  %>
+  <a href="editPatient?id=<%= patientId %>">Edit Patient</a> |
+  <%
+    }
+  %>
+  <a href="patientList">Back to Patient List</a> |
+  <a href="/search">Back to Search</a>
 </div>
 <jsp:include page="/footer.jsp"/>
 </body>

@@ -25,12 +25,47 @@ public class Model {
       for (String colName : df.getColumnNames()) {
         String cellValue = df.getValue(colName, row);
 
-        if (cellValue != null && cellValue.toLowerCase().contains(keyword)) {
+        if (cellValue != null && cellValue.toLowerCase().contains(keyword.toLowerCase())) {
           String firstName = df.getValue("FIRST", row);
           String lastName = df.getValue("LAST", row);
           results.add(firstName + " " + lastName);
           break;
         }
+      }
+    }
+
+    return results;
+  }
+
+  /**
+   * Search for patients and return detailed results including matched fields.
+   * Each result is a Map containing: id, name, and matchedFields.
+   */
+  public List<Map<String, String>> searchForDetailed(String keyword) {
+    List<Map<String, String>> results = new ArrayList<>();
+
+    for (int row = 0; row < df.getRowCount(); row++) {
+      List<String> matchedFields = new ArrayList<>();
+
+      // Check all columns for matches
+      for (String colName : df.getColumnNames()) {
+        String cellValue = df.getValue(colName, row);
+        if (cellValue != null && cellValue.toLowerCase().contains(keyword.toLowerCase())) {
+          matchedFields.add(colName);
+        }
+      }
+
+      // If any field matched, add this patient to results
+      if (!matchedFields.isEmpty()) {
+        Map<String, String> result = new HashMap<>();
+        String firstName = df.getValue("FIRST", row);
+        String lastName = df.getValue("LAST", row);
+        String patientId = df.getValue("ID", row);
+
+        result.put("id", patientId);
+        result.put("name", firstName + " " + lastName);
+        result.put("matchedFields", String.join(", ", matchedFields));
+        results.add(result);
       }
     }
 
