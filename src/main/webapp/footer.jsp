@@ -1,5 +1,5 @@
 <div class="links">
-  <p>The footer</p>
+  <p></p>
   <%
     Integer matchedCount = (Integer) request.getAttribute("matchedCount");
     if (matchedCount != null && matchedCount > 0)
