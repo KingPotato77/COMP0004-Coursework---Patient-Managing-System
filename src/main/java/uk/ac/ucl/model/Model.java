@@ -18,6 +18,11 @@ public class Model {
     return df;
   }
 
+  public void saveToJSON(String fileName) {
+    JSONWriter jsonWriter = new JSONWriter();
+    jsonWriter.writeToJSON(df, fileName);
+  }
+
   public List<String> searchFor(String keyword) {
     List<String> results = new ArrayList<>();
 
@@ -37,10 +42,9 @@ public class Model {
     return results;
   }
 
-  /**
-   * Search for patients and return detailed results including matched fields.
-   * Each result is a Map containing: id, name, and matchedFields.
-   */
+
+  // improved searchFor method
+  // returns a Map with id, name, and matchedFields
   public List<Map<String, String>> searchForDetailed(String keyword) {
     List<Map<String, String>> results = new ArrayList<>();
 
@@ -311,9 +315,7 @@ public class Model {
     return getTotalPatientCount() - getDeceasedCount();
   }
 
-  /**
-   * Calculate age from birth date string (YYYY-MM-DD format).
-   */
+  // calculate age using birthdate
   private int calculateAge(String birthDateStr) {
     try {
       LocalDate birthDate = LocalDate.parse(birthDateStr);
@@ -356,11 +358,9 @@ public class Model {
     return people;
   }
 
-  // ========== REQUIREMENT 8: ADD/EDIT/DELETE ==========
+  // methods for requirement 8
 
-  /**
-   * Update a patient's field value.
-   */
+
   public void updatePatient(String patientId, String columnName, String value) {
     for (int row = 0; row < df.getRowCount(); row++) {
       if (df.getValue("ID", row).equals(patientId)) {
@@ -370,9 +370,7 @@ public class Model {
     }
   }
 
-  /**
-   * Delete a patient by ID.
-   */
+  // delete patient by ID
   public void deletePatient(String patientId) {
     for (int row = 0; row < df.getRowCount(); row++) {
       if (df.getValue("ID", row).equals(patientId)) {
@@ -383,9 +381,7 @@ public class Model {
     }
   }
 
-  /**
-   * Add a new patient with the provided data.
-   */
+
   public void addNewPatient(Map<String, String> patientData) {
     for (String colName : df.getColumnNames()) {
       String value = patientData.getOrDefault(colName, "");
@@ -393,9 +389,7 @@ public class Model {
     }
   }
 
-  /**
-   * Save DataFrame to CSV file.
-   */
+
   public void saveToCSV(String fileName) {
     try {
       java.io.FileWriter writer = new java.io.FileWriter(fileName);
@@ -444,4 +438,3 @@ public class Model {
     }
   }
 }
-
