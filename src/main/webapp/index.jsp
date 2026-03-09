@@ -14,6 +14,7 @@
       <li><a href="search">Search</a></li>
       <li><a href="statistics">View Statistics & Analytics</a></li>
       <li><a href="export">Export to CSV</a></li>
+      <li><a href="saveJSON">Save to JSON</a></li>
     </ul>
   </nav>
 </div>
