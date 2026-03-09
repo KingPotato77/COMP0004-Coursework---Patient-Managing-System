@@ -14,14 +14,23 @@ public class Model {
     df = loader.loadData(fileName);
   }
 
+
   public DataFrame getDf() {
     return df;
   }
+
+
+  public void saveToCSV(String fileName) {
+    CSVWriter csvWriter = new CSVWriter();
+    csvWriter.writeToCSV(df, fileName);
+  }
+
 
   public void saveToJSON(String fileName) {
     JSONWriter jsonWriter = new JSONWriter();
     jsonWriter.writeToJSON(df, fileName);
   }
+
 
   public List<String> searchFor(String keyword) {
     List<String> results = new ArrayList<>();
@@ -75,6 +84,7 @@ public class Model {
 
     return results;
   }
+
 
   public List<String> getPatientNames() {
     List<String> names = new ArrayList<>();
@@ -386,55 +396,6 @@ public class Model {
     for (String colName : df.getColumnNames()) {
       String value = patientData.getOrDefault(colName, "");
       df.addValue(colName, value);
-    }
-  }
-
-
-  public void saveToCSV(String fileName) {
-    try {
-      java.io.FileWriter writer = new java.io.FileWriter(fileName);
-
-      // Write header (column names)
-      ArrayList<String> columnNames = df.getColumnNames();
-      for (int i = 0; i < columnNames.size(); i++) {
-        writer.write(columnNames.get(i));
-        if (i < columnNames.size() - 1) {
-          writer.write(",");
-        }
-      }
-      writer.write("\n");
-
-      // Write data rows (skip empty rows that were deleted)
-      for (int row = 0; row < df.getRowCount(); row++) {
-        boolean isEmpty = true;
-        for (String colName : columnNames) {
-          String value = df.getValue(colName, row);
-          if (value != null && !value.isEmpty()) {
-            isEmpty = false;
-            break;
-          }
-        }
-
-        // Skip empty rows (deleted patients)
-        if (isEmpty) {
-          continue;
-        }
-
-        for (int i = 0; i < columnNames.size(); i++) {
-          String value = df.getValue(columnNames.get(i), row);
-          if (value != null) {
-            writer.write(value);
-          }
-          if (i < columnNames.size() - 1) {
-            writer.write(",");
-          }
-        }
-        writer.write("\n");
-      }
-
-      writer.close();
-    } catch (Exception e) {
-      System.err.println("Error saving CSV: " + e.getMessage());
     }
   }
 }
