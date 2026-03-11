@@ -17,7 +17,7 @@ Requirement 5: Web Application Interface
 - Patient List: View all patients with clickable names linking to details
 - Patient Details: information display for individual patients
 - Navigation: Clean interface with header/footer on all pages
-- Styled with CSS (mainly inline)
+- Styled with CSS (inline)
 
 Requirement 6: Search Functionality
 - Case-insensitive keyword search across all patient fields
@@ -34,11 +34,11 @@ Requirement 8: Data Modification & CSV Export
 - Add new patients with auto generated unique IDs
 - Edit existing patient information with validation
 - Delete patients with proper cleanup
-- Export entire dataset to CSV file (saved to data/patients100.csv)
+- Save entire dataset to CSV file (saves to data/patients100.csv)
 
 Requirement 9: JSON Export
 - JSONWriter class for DataFrame to JSON conversion
-- Export option available in web interface (saves to patients_export.json)
+- Button to save data to JSON available in home page (saves to patients_export.json)
 
 HOW TO RUN
 (need Java and Maven installed)
@@ -46,8 +46,9 @@ HOW TO RUN
 2. Run Main.java from your IDE or: java -cp target/classes uk.ac.ucl.main.Main
 3. Open browser to: http://localhost:8080
 
-*The application currently uses patients100.csv, but it works with any of the patient CSV files in the correct format.
-To change it, replace 'patients100.csv' in:
+*The application currently uses patients100.csv, but it would work with any of the patient CSV files from the GitHub.
+I have not inlcuded them in the data folder to keep the submission folder size small. To use them, as long as the data
+files are in the data folder, just replace the filename 'patients100.csv' with the correct name in:
 - ModelFactory.java (line 24)
 - EditPatientServlet.java (line 68)
 - ExportServlet.java (line 25)
