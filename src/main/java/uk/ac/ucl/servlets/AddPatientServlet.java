@@ -16,8 +16,8 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * The AddPatientServlet handles HTTP requests for adding new patients.
- * It is mapped to the URL "/addPatient".
+ * AddPatientServlet handles displaying the add-patient form and saving a new patient.
+ * Mapped to "/addPatient".
  */
 @WebServlet("/addPatient")
 public class AddPatientServlet extends HttpServlet
@@ -27,7 +27,7 @@ public class AddPatientServlet extends HttpServlet
   {
     try {
       Model model = ModelFactory.getModel();
-      request.setAttribute("columnNames", model.getDf().getColumnNames());
+      request.setAttribute("columnNames", model.getColumnNames());
 
       ServletContext context = getServletContext();
       RequestDispatcher dispatcher = context.getRequestDispatcher("/addPatient.jsp");
@@ -48,7 +48,7 @@ public class AddPatientServlet extends HttpServlet
 
       // Collect all form data
       Map<String, String> patientData = new HashMap<>();
-      for (String colName : model.getDf().getColumnNames()) {
+      for (String colName : model.getColumnNames()) {
         String value = request.getParameter(colName);
         patientData.put(colName, value != null ? value : "");
       }

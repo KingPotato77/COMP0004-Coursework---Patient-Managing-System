@@ -15,8 +15,8 @@ public class Model {
   }
 
 
-  public DataFrame getDf() {
-    return df;
+  public List<String> getColumnNames() {
+    return df.getColumnNames();
   }
 
 
@@ -32,35 +32,12 @@ public class Model {
   }
 
 
-  public List<String> searchFor(String keyword) {
-    List<String> results = new ArrayList<>();
-
-    for (int row = 0; row < df.getRowCount(); row++) {
-      for (String colName : df.getColumnNames()) {
-        String cellValue = df.getValue(colName, row);
-
-        if (cellValue != null && cellValue.toLowerCase().contains(keyword.toLowerCase())) {
-          String firstName = df.getValue("FIRST", row);
-          String lastName = df.getValue("LAST", row);
-          results.add(firstName + " " + lastName);
-          break;
-        }
-      }
-    }
-
-    return results;
-  }
-
-
-  // improved searchFor method
-  // returns a Map with id, name, and matchedFields
   public List<Map<String, String>> searchForDetailed(String keyword) {
     List<Map<String, String>> results = new ArrayList<>();
 
     for (int row = 0; row < df.getRowCount(); row++) {
       List<String> matchedFields = new ArrayList<>();
 
-      // Check all columns for matches
       for (String colName : df.getColumnNames()) {
         String cellValue = df.getValue(colName, row);
         if (cellValue != null && cellValue.toLowerCase().contains(keyword.toLowerCase())) {
@@ -68,15 +45,11 @@ public class Model {
         }
       }
 
-      // If any field matched, add this patient to results
+      // Include this patient in results only when at least one field matched
       if (!matchedFields.isEmpty()) {
         Map<String, String> result = new HashMap<>();
-        String firstName = df.getValue("FIRST", row);
-        String lastName = df.getValue("LAST", row);
-        String patientId = df.getValue("ID", row);
-
-        result.put("id", patientId);
-        result.put("name", firstName + " " + lastName);
+        result.put("id", df.getValue("ID", row));
+        result.put("name", df.getValue("FIRST", row) + " " + df.getValue("LAST", row));
         result.put("matchedFields", String.join(", ", matchedFields));
         results.add(result);
       }
@@ -88,12 +61,18 @@ public class Model {
 
   public List<String> getPatientNames() {
     List<String> names = new ArrayList<>();
-
     for (int i = 0; i < df.getRowCount(); i++) {
       names.add(df.getValue("FIRST", i) + " " + df.getValue("LAST", i));
     }
-
     return names;
+  }
+
+  public List<String> getPatientIds() {
+    List<String> ids = new ArrayList<>();
+    for (int i = 0; i < df.getRowCount(); i++) {
+      ids.add(df.getValue("ID", i));
+    }
+    return ids;
   }
 
   public Map<String, String> getPatientDetails(String id) {
@@ -110,7 +89,7 @@ public class Model {
   }
 
 
-  // methods for requirement 7
+  // Statistics and analytics (Requirement 7)
 
   public Map<String, String> findOldestPerson() {
     Map<String, String> oldest = new LinkedHashMap<>();
@@ -120,7 +99,7 @@ public class Model {
 
     for (int i = 0; i < df.getRowCount(); i++) {
       String deathDate = df.getValue("DEATHDATE", i);
-      // Only consider alive people (no death date)
+      // Only consider alive people
       if (deathDate == null || deathDate.isEmpty()) {
         String birthDateStr = df.getValue("BIRTHDATE", i);
         if (birthDateStr != null && !birthDateStr.isEmpty()) {
@@ -170,49 +149,39 @@ public class Model {
   }
 
 
-  public Map<String, Integer> getPeopleByCity() {
-    Map<String, Integer> cityCount = new LinkedHashMap<>();
+  // Counts occurrences of each value in the given column, sorted by count descending.
+  // If includeUnknown is true, blank values are counted under "Unknown".
+  private Map<String, Integer> sortedCountMap(String columnName, boolean includeUnknown) {
+    Map<String, Integer> counts = new LinkedHashMap<>();
 
     for (int i = 0; i < df.getRowCount(); i++) {
-      String city = df.getValue("CITY", i);
-      if (city != null && !city.isEmpty()) {
-        cityCount.put(city, cityCount.getOrDefault(city, 0) + 1);
+      String value = df.getValue(columnName, i);
+      if (value != null && !value.isEmpty()) {
+        counts.put(value, counts.getOrDefault(value, 0) + 1);
+      } else if (includeUnknown) {
+        counts.put("Unknown", counts.getOrDefault("Unknown", 0) + 1);
       }
     }
 
-    // Sort by count (descending)
-    return cityCount.entrySet()
-      .stream()
-      .sorted((a, b) -> b.getValue().compareTo(a.getValue()))
-      .collect(Collectors.toMap(
-        Map.Entry::getKey,
-        Map.Entry::getValue,
-        (e1, e2) -> e1,
-        LinkedHashMap::new
-      ));
+    return counts.entrySet()
+            .stream()
+            .sorted((a, b) -> b.getValue().compareTo(a.getValue()))
+            .collect(Collectors.toMap(
+                    Map.Entry::getKey,
+                    Map.Entry::getValue,
+                    (e1, e2) -> e1,
+                    LinkedHashMap::new
+            ));
+  }
+
+
+  public Map<String, Integer> getPeopleByCity() {
+    return sortedCountMap("CITY", false);
   }
 
 
   public Map<String, Integer> getPeopleByState() {
-    Map<String, Integer> stateCount = new LinkedHashMap<>();
-
-    for (int i = 0; i < df.getRowCount(); i++) {
-      String state = df.getValue("STATE", i);
-      if (state != null && !state.isEmpty()) {
-        stateCount.put(state, stateCount.getOrDefault(state, 0) + 1);
-      }
-    }
-
-    // Sort by count (descending)
-    return stateCount.entrySet()
-      .stream()
-      .sorted((a, b) -> b.getValue().compareTo(a.getValue()))
-      .collect(Collectors.toMap(
-        Map.Entry::getKey,
-        Map.Entry::getValue,
-        (e1, e2) -> e1,
-        LinkedHashMap::new
-      ));
+    return sortedCountMap("STATE", false);
   }
 
 
@@ -222,8 +191,8 @@ public class Model {
     for (int i = 0; i < df.getRowCount(); i++) {
       String gender = df.getValue("GENDER", i);
       if (gender != null && !gender.isEmpty()) {
-        String genderLabel = gender.equals("M") ? "Male" : gender.equals("F") ? "Female" : "Other";
-        genderCount.put(genderLabel, genderCount.getOrDefault(genderLabel, 0) + 1);
+        String label = gender.equals("M") ? "Male" : gender.equals("F") ? "Female" : "Other";
+        genderCount.put(label, genderCount.getOrDefault(label, 0) + 1);
       }
     }
 
@@ -232,75 +201,17 @@ public class Model {
 
 
   public Map<String, Integer> getRaceDistribution() {
-    Map<String, Integer> raceCount = new LinkedHashMap<>();
-
-    for (int i = 0; i < df.getRowCount(); i++) {
-      String race = df.getValue("RACE", i);
-      if (race != null && !race.isEmpty()) {
-        raceCount.put(race, raceCount.getOrDefault(race, 0) + 1);
-      }
-    }
-
-    // Sort by count (descending)
-    return raceCount.entrySet()
-      .stream()
-      .sorted((a, b) -> b.getValue().compareTo(a.getValue()))
-      .collect(Collectors.toMap(
-        Map.Entry::getKey,
-        Map.Entry::getValue,
-        (e1, e2) -> e1,
-        LinkedHashMap::new
-      ));
+    return sortedCountMap("RACE", false);
   }
 
 
   public Map<String, Integer> getMaritalStatusDistribution() {
-    Map<String, Integer> maritalCount = new LinkedHashMap<>();
-
-    for (int i = 0; i < df.getRowCount(); i++) {
-      String marital = df.getValue("MARITAL", i);
-      if (marital != null && !marital.isEmpty()) {
-        maritalCount.put(marital, maritalCount.getOrDefault(marital, 0) + 1);
-      } else {
-        maritalCount.put("Unknown", maritalCount.getOrDefault("Unknown", 0) + 1);
-      }
-    }
-
-    // Sort by count (descending)
-    return maritalCount.entrySet()
-      .stream()
-      .sorted((a, b) -> b.getValue().compareTo(a.getValue()))
-      .collect(Collectors.toMap(
-        Map.Entry::getKey,
-        Map.Entry::getValue,
-        (e1, e2) -> e1,
-        LinkedHashMap::new
-      ));
+    return sortedCountMap("MARITAL", true);
   }
 
 
   public Map<String, Integer> getEthnicityDistribution() {
-    Map<String, Integer> ethnicityCount = new LinkedHashMap<>();
-
-    for (int i = 0; i < df.getRowCount(); i++) {
-      String ethnicity = df.getValue("ETHNICITY", i);
-      if (ethnicity != null && !ethnicity.isEmpty()) {
-        ethnicityCount.put(ethnicity, ethnicityCount.getOrDefault(ethnicity, 0) + 1);
-      } else {
-        ethnicityCount.put("Unknown", ethnicityCount.getOrDefault("Unknown", 0) + 1);
-      }
-    }
-
-    // Sort by count (descending)
-    return ethnicityCount.entrySet()
-      .stream()
-      .sorted((a, b) -> b.getValue().compareTo(a.getValue()))
-      .collect(Collectors.toMap(
-        Map.Entry::getKey,
-        Map.Entry::getValue,
-        (e1, e2) -> e1,
-        LinkedHashMap::new
-      ));
+    return sortedCountMap("ETHNICITY", true);
   }
 
 
@@ -325,17 +236,6 @@ public class Model {
     return getTotalPatientCount() - getDeceasedCount();
   }
 
-  // calculate age using birthdate
-  private int calculateAge(String birthDateStr) {
-    try {
-      LocalDate birthDate = LocalDate.parse(birthDateStr);
-      LocalDate today = LocalDate.now();
-      return Period.between(birthDate, today).getYears();
-    } catch (Exception e) {
-      return 0;
-    }
-  }
-
 
   public double getAverageAge() {
     int totalAge = 0;
@@ -357,19 +257,7 @@ public class Model {
   }
 
 
-  public List<String> getPeopleInCity(String cityName) {
-    List<String> people = new ArrayList<>();
-    for (int i = 0; i < df.getRowCount(); i++) {
-      String city = df.getValue("CITY", i);
-      if (city != null && city.equalsIgnoreCase(cityName)) {
-        people.add(df.getValue("FIRST", i) + " " + df.getValue("LAST", i));
-      }
-    }
-    return people;
-  }
-
-  // methods for requirement 8
-
+  // Add, edit, delete patients (Requirement 8)
 
   public void updatePatient(String patientId, String columnName, String value) {
     for (int row = 0; row < df.getRowCount(); row++) {
@@ -380,11 +268,9 @@ public class Model {
     }
   }
 
-  // delete patient by ID
   public void deletePatient(String patientId) {
     for (int row = 0; row < df.getRowCount(); row++) {
       if (df.getValue("ID", row).equals(patientId)) {
-        // Actually remove the row from the DataFrame
         df.removeRow(row);
         break;
       }
@@ -394,8 +280,18 @@ public class Model {
 
   public void addNewPatient(Map<String, String> patientData) {
     for (String colName : df.getColumnNames()) {
-      String value = patientData.getOrDefault(colName, "");
-      df.addValue(colName, value);
+      df.addValue(colName, patientData.getOrDefault(colName, ""));
+    }
+  }
+
+
+  // Returns 0 if the date string cannot be parsed (e.g. malformed or missing data).
+  private int calculateAge(String birthDateStr) {
+    try {
+      LocalDate birthDate = LocalDate.parse(birthDateStr);
+      return Period.between(birthDate, LocalDate.now()).getYears();
+    } catch (Exception e) {
+      return 0;
     }
   }
 }

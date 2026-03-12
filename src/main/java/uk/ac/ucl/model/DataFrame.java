@@ -7,14 +7,13 @@ public class DataFrame {
     private final ArrayList<Column> columns;
 
     public DataFrame() {
-        columns = new ArrayList<Column>();
+        columns = new ArrayList<>();
     }
 
     public void addColumn(Column column) {
         columns.add(column);
     }
 
-    // change to List<String> ???
     public ArrayList<String> getColumnNames() {
         ArrayList<String> names = new ArrayList<>();
 
@@ -62,5 +61,3 @@ public class DataFrame {
         }
     }
 }
-
-// maybe make findColumn() to not repeat the for loop in every method

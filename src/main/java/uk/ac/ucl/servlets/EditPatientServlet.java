@@ -14,8 +14,8 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * The EditPatientServlet handles HTTP requests for editing and deleting patients.
- * It is mapped to the URL "/editPatient".
+ * EditPatientServlet handles viewing, editing, and deleting a patient record.
+ * Mapped to "/editPatient".
  */
 @WebServlet("/editPatient")
 public class EditPatientServlet extends HttpServlet
@@ -56,7 +56,7 @@ public class EditPatientServlet extends HttpServlet
         request.setAttribute("successMessage", "Patient deleted successfully.");
       } else if ("save".equals(action)) {
         // Get all column names and update each field
-        for (String colName : model.getDf().getColumnNames()) {
+        for (String colName : model.getColumnNames()) {
           String value = request.getParameter(colName);
           if (value != null) {
             model.updatePatient(patientId, colName, value);

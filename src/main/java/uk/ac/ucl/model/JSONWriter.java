@@ -3,8 +3,11 @@ package uk.ac.ucl.model;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 public class JSONWriter {
+
+    private static final Logger logger = Logger.getLogger(JSONWriter.class.getName());
 
     public void writeToJSON(DataFrame df, String fileName) {
         try (FileWriter writer = new FileWriter(fileName)) {
@@ -25,7 +28,6 @@ public class JSONWriter {
             }
 
             for (int row = 0; row < rowCount; row++) {
-                // skip deleted (empty) rows
                 String id = df.getValue("ID", row);
                 if (id == null || id.isEmpty()) {
                     continue;
@@ -60,7 +62,7 @@ public class JSONWriter {
             writer.write("]\n");
 
         } catch (IOException e) {
-            System.out.println("Error writing JSON file: " + e.getMessage());
+            logger.warning("Error writing JSON file: " + e.getMessage());
         }
     }
 }

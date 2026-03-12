@@ -3,8 +3,11 @@ package uk.ac.ucl.model;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 public class CSVWriter {
+
+    private static final Logger logger = Logger.getLogger(CSVWriter.class.getName());
 
     public void writeToCSV(DataFrame df, String fileName) {
         try (FileWriter writer = new FileWriter(fileName)) {
@@ -21,7 +24,6 @@ public class CSVWriter {
 
             // write data rows
             for (int row = 0; row < df.getRowCount(); row++) {
-                // skip deleted (empty) rows
                 String id = df.getValue("ID", row);
                 if (id == null || id.isEmpty()) {
                     continue;
@@ -40,7 +42,7 @@ public class CSVWriter {
             }
 
         } catch (IOException e) {
-            System.out.println("Error writing CSV file: " + e.getMessage());
+            logger.warning("Error writing CSV file: " + e.getMessage());
         }
     }
 }
