@@ -1,3 +1,156 @@
 .clearBoth {
   clear: both;
 }
+
+/* Layout */
+.main {
+  padding: 20px;
+}
+
+h1 {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+/* Forms (add / edit patient) */
+.form-container {
+  width: 500px;
+  margin: 20px 0;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.button-group {
+  margin-top: 20px;
+}
+
+/* Buttons and links styled as buttons */
+a.btn-green, button.btn-green,
+a.btn-red,   button.btn-red,
+a.btn-grey,  button.btn-grey {
+  padding: 10px 20px;
+  margin-right: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  border: none;
+  border-radius: 4px;
+  text-decoration: none;
+  display: inline-block;
+  color: white !important;
+}
+
+a.btn-green, button.btn-green {
+  background-color: #4CAF50 !important;
+}
+
+a.btn-red, button.btn-red {
+  background-color: #f44336 !important;
+}
+
+a.btn-grey, button.btn-grey {
+  background-color: #999 !important;
+}
+
+.btn-blue {
+  color: #2196F3 !important;
+  text-decoration: none;
+  font-size: 14px;
+  margin-left: 20px;
+}
+
+/* Delete section on edit page */
+.delete-section {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #ddd;
+}
+
+/* Statistics page */
+.stat-container {
+  margin: 20px 0;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.stat-title {
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.stat-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.stat-table th, .stat-table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.stat-table th {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.stat-table tr:hover {
+  background-color: #f5f5f5;
+}
+
+.side-by-side {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+}
+
+.side-by-side .stat-table {
+  flex: 1;
+}
+
+.chart-box {
+  flex-shrink: 0;
+}
+
+/* Search results */
+.matched-fields {
+  color: #666;
+  font-size: 14px;
+}
+
+.stat-section-header {
+  margin-top: 20px;
+}
+
+/* Status messages */
+.error-message {
+  color: red;
+}
+
+.success-message {
+  color: green;
+}
+
+.inline-form {
+  display: inline;
+}

@@ -10,12 +10,12 @@
 <jsp:include page="/header.jsp"/>
 <div class="main">
   <h2>Patients:</h2>
-  <a href="addPatient"><button style="margin-bottom: 20px; padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">Add New Patient</button></a>
+  <a href="addPatient" class="btn-green">Add New Patient</a>
   <%
     String errorMessage = (String) request.getAttribute("errorMessage");
     if (errorMessage != null) {
   %>
-      <p style="color: red;"><%= errorMessage %></p>
+      <p class="error-message"><%= errorMessage %></p>
   <%
     }
   %>
@@ -31,7 +31,7 @@
     %>
     <li>
       <a href="patientDetails?id=<%=patientId%>"><%=patient%></a>
-      <a href="editPatient?id=<%=patientId%>" style="margin-left: 20px; color: #2196F3; text-decoration: none; font-size: 14px;">[Edit]</a>
+      <a href="editPatient?id=<%=patientId%>" class="btn-blue">[Edit]</a>
     </li>
     <%
           }

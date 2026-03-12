@@ -12,15 +12,13 @@
   <h2>Patient Details</h2>
   <%
     String errorMessage = (String) request.getAttribute("errorMessage");
-    if (errorMessage != null)
-    {
+    if (errorMessage != null) {
   %>
-      <p style="color: red;"><%= errorMessage %></p>
+      <p class="error-message"><%= errorMessage %></p>
   <%
     }
     Map<String, String> patientDetails = (Map<String, String>) request.getAttribute("patientDetails");
-    if (patientDetails != null && !patientDetails.isEmpty())
-    {
+    if (patientDetails != null && !patientDetails.isEmpty()) {
   %>
   <table border="1">
     <tr>
@@ -28,8 +26,7 @@
       <th>Value</th>
     </tr>
     <%
-      for (Map.Entry<String, String> entry : patientDetails.entrySet())
-      {
+      for (Map.Entry<String, String> entry : patientDetails.entrySet()) {
     %>
     <tr>
       <td><%= entry.getKey() %></td>

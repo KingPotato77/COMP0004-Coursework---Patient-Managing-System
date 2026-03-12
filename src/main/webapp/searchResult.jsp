@@ -19,34 +19,30 @@
   <%
     }
     String errorMessage = (String) request.getAttribute("errorMessage");
-    if (errorMessage != null)
-    {
+    if (errorMessage != null) {
   %>
-      <p style="color: red;"><%= errorMessage %></p>
+      <p class="error-message"><%= errorMessage %></p>
   <%
     }
     List<Map<String, String>> patients = (List<Map<String, String>>) request.getAttribute("result");
-    if (patients != null && patients.size() != 0)
-    {
-    %>
+    if (patients != null && patients.size() != 0) {
+  %>
     <ul>
       <%
-        for (Map<String, String> patient : patients)
-        {
+        for (Map<String, String> patient : patients) {
           String patientId = patient.get("id");
           String patientName = patient.get("name");
           String matchedFields = patient.get("matchedFields");
       %>
       <li>
         <a href="patientDetails?id=<%= patientId %>"><%= patientName %></a>
-        <span style="color: #666; font-size: 14px;"> - Matched in: <%= matchedFields %></span>
+        <span class="matched-fields"> - Matched in: <%= matchedFields %></span>
       </li>
-     <% }
-    } else if (errorMessage == null)
-    {%>
+      <% } %>
+    </ul>
+  <% } else if (errorMessage == null) { %>
       <p>No patients found matching your search term.</p>
-  <%}%>
-  </ul>
+  <% } %>
 </div>
 <jsp:include page="/footer.jsp"/>
 <a href="/search">Back to Search</a>

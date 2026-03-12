@@ -5,49 +5,6 @@
 <head>
   <jsp:include page="/meta.jsp"/>
   <title>Patient Statistics</title>
-  <style>
-    .stat-container {
-      margin: 20px 0;
-      padding: 15px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      background-color: #f9f9f9;
-    }
-    .stat-title {
-      font-weight: bold;
-      font-size: 18px;
-      margin-bottom: 10px;
-      color: #333;
-    }
-    .stat-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-    .stat-table th, .stat-table td {
-      padding: 10px;
-      text-align: left;
-      border-bottom: 1px solid #ddd;
-    }
-    .stat-table th {
-      background-color: #4CAF50;
-      color: white;
-    }
-    .stat-table tr:hover {
-      background-color: #f5f5f5;
-    }
-    .side-by-side {
-      display: flex;
-      gap: 30px;
-      align-items: flex-start;
-    }
-    .side-by-side .stat-table {
-      flex: 1;
-    }
-    .chart-box {
-      flex-shrink: 0;
-    }
-  </style>
 </head>
 <body>
 <jsp:include page="/header.jsp"/>
@@ -58,7 +15,7 @@
     String errorMessage = (String) request.getAttribute("errorMessage");
     if (errorMessage != null) {
   %>
-      <p style="color: red;"><%= errorMessage %></p>
+      <p class="error-message"><%= errorMessage %></p>
   <%
     }
   %>
@@ -67,26 +24,11 @@
   <div class="stat-container">
     <div class="stat-title">Overview</div>
     <table class="stat-table">
-      <tr>
-        <th>Metric</th>
-        <th>Count</th>
-      </tr>
-      <tr>
-        <td>Total Patients</td>
-        <td><%= request.getAttribute("totalPatients") %></td>
-      </tr>
-      <tr>
-        <td>Living Patients</td>
-        <td><%= request.getAttribute("livingPatients") %></td>
-      </tr>
-      <tr>
-        <td>Deceased Patients</td>
-        <td><%= request.getAttribute("deceasedPatients") %></td>
-      </tr>
-      <tr>
-        <td>Average Age (Living)</td>
-        <td><%= request.getAttribute("averageAge") %> years</td>
-      </tr>
+      <tr><th>Metric</th><th>Count</th></tr>
+      <tr><td>Total Patients</td><td><%= request.getAttribute("totalPatients") %></td></tr>
+      <tr><td>Living Patients</td><td><%= request.getAttribute("livingPatients") %></td></tr>
+      <tr><td>Deceased Patients</td><td><%= request.getAttribute("deceasedPatients") %></td></tr>
+      <tr><td>Average Age (Living)</td><td><%= request.getAttribute("averageAge") %> years</td></tr>
     </table>
   </div>
 
@@ -98,12 +40,7 @@
       Map<String, String> youngestPerson = (Map<String, String>) request.getAttribute("youngestPerson");
     %>
     <table class="stat-table">
-      <tr>
-        <th>Category</th>
-        <th>Name</th>
-        <th>Age</th>
-        <th>Birth Date</th>
-      </tr>
+      <tr><th>Category</th><th>Name</th><th>Age</th><th>Birth Date</th></tr>
       <% if (oldestPerson != null && !oldestPerson.isEmpty()) { %>
       <tr>
         <td>Oldest Living</td>
@@ -138,7 +75,7 @@
       <% } } %>
     </table>
 
-    <h3 style="margin-top: 20px;">By City (Top 10)</h3>
+    <h3 class="stat-section-header">By City (Top 10)</h3>
     <%
       Map<String, Integer> peopleByCity = (Map<String, Integer>) request.getAttribute("peopleByCity");
       int cityCount = 0;
@@ -179,7 +116,7 @@
       </div>
     </div>
 
-    <h3 style="margin-top: 20px;">Race Distribution</h3>
+    <h3 class="stat-section-header">Race Distribution</h3>
     <%
       Map<String, Integer> raceDist = (Map<String, Integer>) request.getAttribute("raceDistribution");
     %>
@@ -196,7 +133,7 @@
       </div>
     </div>
 
-    <h3 style="margin-top: 20px;">Ethnicity Distribution</h3>
+    <h3 class="stat-section-header">Ethnicity Distribution</h3>
     <%
       Map<String, Integer> ethnicityDist = (Map<String, Integer>) request.getAttribute("ethnicityDistribution");
     %>
@@ -208,7 +145,7 @@
       <% } } %>
     </table>
 
-    <h3 style="margin-top: 20px;">Marital Status Distribution</h3>
+    <h3 class="stat-section-header">Marital Status Distribution</h3>
     <%
       Map<String, Integer> maritalDist = (Map<String, Integer>) request.getAttribute("maritalStatusDistribution");
     %>
@@ -231,7 +168,6 @@
 <a href="/">Back to Home</a>
 
 <script>
-  // helper: draw a horizontal bar chart on a canvas
   function drawBarChart(canvasId, labels, values, color) {
     var canvas = document.getElementById(canvasId);
     var ctx = canvas.getContext("2d");
@@ -243,28 +179,20 @@
 
     ctx.clearRect(0, 0, w, h);
     ctx.font = "11px sans-serif";
-    ctx.fillStyle = "#333";
 
     for (var i = 0; i < labels.length; i++) {
       var y = padding.top + i * barHeight;
       var barW = (values[i] / max) * (w - padding.left - padding.right - labelWidth - 30);
-
-      // label
       ctx.fillStyle = "#333";
       ctx.textBaseline = "middle";
       ctx.fillText(labels[i], padding.left, y + barHeight / 2);
-
-      // bar
       ctx.fillStyle = color;
       ctx.fillRect(padding.left + labelWidth, y + 3, barW, barHeight - 6);
-
-      // value
       ctx.fillStyle = "#333";
       ctx.fillText(values[i], padding.left + labelWidth + barW + 4, y + barHeight / 2);
     }
   }
 
-  // helper: draw a pie chart on a canvas
   function drawPieChart(canvasId, labels, values, colors) {
     var canvas = document.getElementById(canvasId);
     var ctx = canvas.getContext("2d");
@@ -285,7 +213,6 @@
       angle += slice;
     }
 
-    // legend at bottom
     var legendX = 5, legendY = cy + radius + 10;
     ctx.font = "11px sans-serif";
     for (var j = 0; j < labels.length; j++) {
@@ -300,7 +227,6 @@
 
   var colors = ["#4CAF50","#2196F3","#FF9800","#9C27B0","#F44336","#00BCD4"];
 
-  // Gender pie chart
   <%
     Map<String, Integer> genderChartData = (Map<String, Integer>) request.getAttribute("genderDistribution");
   %>
@@ -313,7 +239,6 @@
     drawPieChart("genderChart", labels, values, colors);
   })();
 
-  // City bar chart
   <%
     Map<String, Integer> cityChartData = (Map<String, Integer>) request.getAttribute("peopleByCity");
     int chartCityCount = 0;
@@ -328,7 +253,6 @@
     drawBarChart("cityChart", labels, values, "#4CAF50");
   })();
 
-  // Race bar chart
   <%
     Map<String, Integer> raceChartData = (Map<String, Integer>) request.getAttribute("raceDistribution");
   %>
@@ -341,7 +265,6 @@
     drawBarChart("raceChart", labels, values, "#2196F3");
   })();
 
-  // Marital status pie chart
   <%
     Map<String, Integer> maritalChartData = (Map<String, Integer>) request.getAttribute("maritalStatusDistribution");
   %>
