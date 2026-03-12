@@ -16,7 +16,7 @@ Requirements 1-4: Core Data Structure
 Requirement 5: Web Application Interface
 - Patient List: View all patients with clickable names linking to details
 - Patient Details: information display for individual patients
-- Navigation: Clean interface with header/footer on all pages
+- Navigation: links on every page to return to previous page
 - Styled with CSS (inline)
 
 Requirement 6: Search Functionality
