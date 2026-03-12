@@ -1,55 +1,48 @@
-PATIENT DATA WEB APPLICATION
+COMP0004 Coursework - Patient Data Web Application
 
-OVERVIEW
-This Java web application manages and analyzes patient data from the provided CSV files using a DataFrame structure.
-Built with Tomcat, Servlets, and JSPs following the MVC pattern. Allows for viewing patient list, adding/editing/removing
-patients from database, viewing statistics, and updating database (in CSV or JSON).
-Boilerplate code generated with the help of GitHub Copilot.
+Overview
 
-FEATURES IMPLEMENTED
-Requirements 1-4: Core Data Structure
-- Column class with name and ArrayList of row values
-- DataFrame class managing collections of columns
-- DataLoader class for reading CSV files into DataFrame
-- Model class implementing Singleton pattern for centralized data management
+This Java web application loads, displays, and manages synthetic patient data from CSV files.
+It's built using embedded Tomcat, Java Servlets, and JSPs, following the Model-View-Controller
+pattern. The data is held in a custom DataFrame structure made up of Column objects, loaded by
+a DataLoader class, and managed through a Model accessed via the Singleton pattern.
 
-Requirement 5: Web Application Interface
-- Patient List: View all patients with clickable names linking to details
-- Patient Details: information display for individual patients
-- Navigation: links on every page to return to previous page
-- Styled with CSS (inline)
+Data and Search
 
-Requirement 6: Search Functionality
-- Case-insensitive keyword search across all patient fields
-- Search implementation in Model class (not servlets/JSPs)
-- Results display patient names with matched fields highlighted, link to patient detail pages, and show match count
+Patient data is read from patients100.csv at startup. The DataFrame stores all fields as
+strings, each Column holding one CSV column across all rows. Search is implemented
+entirely in the Model class, with case-insensitive matching across every field. Results
+include the patient name, the fields that matched, and a link to the full patient details page.
 
-Requirements 7 & 10: Statistical Operations
-- Age analysis: oldest and youngest patients with calculated ages
-- Geographic distribution: Patients grouped by city and state
-- Demographics distribution by gender, race, ethnicity, marital status
-- Graphs to help visualize distribution
+Web Interface
 
-Requirement 8: Data Modification & CSV Export
-- Add new patients with auto generated unique IDs
-- Edit existing patient information with validation
-- Delete patients with proper cleanup
-- Save entire dataset to CSV file (saves to data/patients100.csv)
+The application provides a patient list, individual patient detail pages, an add-patient form,
+and an edit/delete form. Each page links back to the previous one. Servlets handle all requests
+and pass data to JSPs as request attributes. JSPs contain only the display logic needed to
+render the response.
 
-Requirement 9: JSON Export
-- JSONWriter class for DataFrame to JSON conversion
-- Button to save data to JSON available in home page (saves to patients_export.json)
+Statistics and Analytics
 
-HOW TO RUN
-(need Java and Maven installed)
+The statistics page shows total, living, and deceased patient counts, average age, and the
+oldest and youngest living patients. It also shows distributions by city, state, gender, race,
+ethnicity, and marital status. Supported visually with inline bar charts using HTML and CSS.
+
+Data Export
+
+The full dataset can be saved back to CSV using a dedicated export button, which overwrites
+patients100.csv. A separate button saves the data to patients_export.json, written by a custom
+JSONWriter class that produces well-formed JSON.
+
+How to Run
+
+Requires Java and Maven.
 1. Run: mvn clean package
-2. Run Main.java from your IDE or: java -cp target/classes uk.ac.ucl.main.Main
+2. Run Main.java from the IDE, or: java -cp target/classes uk.ac.ucl.main.Main
 3. Open browser to: http://localhost:8080
 
-*The application currently uses patients100.csv, but it would work with any of the patient CSV files from the GitHub.
-I have not inlcuded them in the data folder to keep the submission folder size small. To use them, as long as the data
-files are in the data folder, just replace the filename 'patients100.csv' with the correct name in:
+The application reads from data/patients100.csv. To use a larger dataset, place the chosen
+CSV file in the data/ folder and update the filename in
 - ModelFactory.java (line 24)
 - EditPatientServlet.java (line 68)
-- ExportServlet.java (line 25)
 - AddPatientServlet.java (line 63)
+- ExportServlet.java (line 25)
